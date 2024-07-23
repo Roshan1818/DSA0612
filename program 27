@@ -1,0 +1,20 @@
+# Load necessary library
+library(ggplot2)
+
+# Create the data frame
+data <- data.frame(
+  Date = as.Date(c('2023-01-01', '2023-01-02', '2023-01-03', '2023-01-04', '2023-01-05')),
+  Temperature = c(10, 12, 8, 15, 14),
+  Humidity = c(75, 70, 80, 65, 72),
+  Wind_Speed = c(15, 12, 18, 20, 16)
+)
+
+# Plot Wind Speed vs Humidity with Temperature as the color gradient
+ggplot(data, aes(x = Wind_Speed, y = Humidity, color = Temperature)) +
+  geom_point(size = 5) +  # Use larger points for better visibility
+  scale_color_gradient(low = 'blue', high = 'red') +  # Color gradient from blue to red
+  labs(title = 'Wind Speed vs Humidity with Temperature as Color',
+       x = 'Wind Speed (km/h)',
+       y = 'Humidity (%)',
+       color = 'Temperature (°C)') +
+  theme_minimal()
