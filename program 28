@@ -1,0 +1,33 @@
+# Load necessary libraries
+library(ggplot2)
+library(GGally)
+library(reshape2)
+
+# Create the data frame
+data <- data.frame(
+  Date = as.Date(c('2023-01-01', '2023-01-02', '2023-01-03', '2023-01-04', '2023-01-05')),
+  Temperature = c(10, 12, 8, 15, 14),
+  Humidity = c(75, 70, 80, 65, 72),
+  Wind_Speed = c(15, 12, 18, 20, 16)
+)
+
+# Pair Plot
+ggpairs(data[, c("Temperature", "Humidity", "Wind_Speed")],
+        lower = list(continuous = "smooth"), 
+        diag = list(continuous = "densityDiag"), 
+        upper = list(continuous = "cor")) +
+  labs(title = 'Pair Plot of Temperature, Humidity, and Wind Speed')
+
+# Correlation Matrix
+cor_matrix <- cor(data[, c("Temperature", "Humidity", "Wind_Speed")])
+melted_cor_matrix <- melt(cor_matrix)
+
+# Plot Correlation Matrix
+ggplot(data = melted_cor_matrix, aes(x = Var1, y = Var2, fill = value)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Correlation") +
+  theme_minimal() +
+  labs(title = 'Correlation Matrix of Temperature, Humidity, and Wind Speed') +
+  geom_text(aes(label = round(value, 2)), color = "black", size = 4)
