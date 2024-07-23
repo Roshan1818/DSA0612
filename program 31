@@ -1,0 +1,30 @@
+# Load necessary library
+library(ggplot2)
+
+# Create the data frame
+data <- data.frame(
+  Date = as.Date(c('2023-01-01', '2023-01-02', '2023-01-03', '2023-01-04', '2023-01-05')),
+  Stock_Price = c(100, 102, 98, 105, 108),
+  Volume_Traded = c(2.5, 3.0, 2.2, 2.8, 3.5),
+  Market_Cap = c(500, 510, 490, 525, 540)
+)
+
+# View the data
+print(data)
+
+# Perform the linear regression
+model <- lm(Stock_Price ~ Volume_Traded + Market_Cap, data = data)
+
+# Summary of the model
+summary(model)
+
+# Plot the relationships
+ggplot(data, aes(x = Volume_Traded, y = Stock_Price)) +
+  geom_point() +
+  geom_smooth(method = 'lm') +
+  labs(title = "Stock Price vs Volume Traded", x = "Volume Traded (millions)", y = "Stock Price ($)")
+
+ggplot(data, aes(x = Market_Cap, y = Stock_Price)) +
+  geom_point() +
+  geom_smooth(method = 'lm') +
+  labs(title = "Stock Price vs Market Capitalization", x = "Market Cap ($)", y = "Stock Price ($)")
