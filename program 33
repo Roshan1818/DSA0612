@@ -1,0 +1,29 @@
+# Install and load necessary packages
+install.packages("plotly")
+install.packages("stats")  # For k-means clustering
+library(plotly)
+library(stats)
+
+# Create a data frame with your data
+data <- data.frame(
+  Date = as.Date(c("2023-01-01", "2023-01-02", "2023-01-03", "2023-01-04", "2023-01-05")),
+  Stock_Price = c(100, 102, 98, 105, 108),
+  Volume_Traded = c(2.5, 3.0, 2.2, 2.8, 3.5),
+  Market_Cap = c(500, 510, 490, 525, 540)
+)
+
+# Perform k-means clustering
+set.seed(123)  # For reproducibility
+kmeans_result <- kmeans(data[, c("Stock_Price", "Volume_Traded", "Market_Cap")], centers = 2)
+
+# Add cluster assignments to the data frame
+data$Cluster <- as.factor(kmeans_result$cluster)
+
+# Create the 3D scatter plot
+plot_ly(data, x = ~Stock_Price, y = ~Volume_Traded, z = ~Market_Cap, color = ~Cluster, colors = c('red', 'blue'),
+        type = "scatter3d", mode = "markers", marker = list(size = 10)) %>%
+  layout(scene = list(
+    xaxis = list(title = 'Stock Price'),
+    yaxis = list(title = 'Volume Traded'),
+    zaxis = list(title = 'Market Cap')
+  ))
