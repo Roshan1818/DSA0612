@@ -1,0 +1,47 @@
+# Install necessary packages if not already installed
+if (!require(dplyr)) install.packages("dplyr")
+if (!require(plotly)) install.packages("plotly")
+
+# Load libraries
+library(dplyr)
+library(plotly)
+
+# Create the original data frame
+data <- data.frame(
+  Product = c("A", "B", "C", "D", "E"),
+  Price = c(50, 70, 60, 45, 55),
+  Rating = c(4.2, 3.8, 4.0, 4.5, 3.9),
+  AgeGroup = c("25-35", "35-45", "18-25", "45-55", "25-35")
+)
+
+# Convert AgeGroup to numeric
+data <- data %>%
+  mutate(AgeGroupNumeric = as.numeric(factor(AgeGroup, levels = c("18-25", "25-35", "35-45", "45-55"))))
+
+# 3D Scatter Plot of Price vs. Rating
+plot_price_rating <- plot_ly(data, x = ~Price, y = ~Rating, z = ~AgeGroupNumeric,
+                             color = ~AgeGroup, colors = c("blue", "red", "green", "purple"),
+                             type = 'scatter3d', mode = 'markers',
+                             marker = list(size = 10)) %>%
+  layout(title = "3D Scatter Plot of Price vs. Rating",
+         scene = list(
+           xaxis = list(title = "Price ($)"),
+           yaxis = list(title = "Rating (out of 5)"),
+           zaxis = list(title = "Age Group (Numeric)")
+         ))
+
+# 3D Scatter Plot of Age Group vs. Rating
+plot_age_rating <- plot_ly(data, x = ~AgeGroupNumeric, y = ~Rating, z = ~Price,
+                           color = ~AgeGroup, colors = c("blue", "red", "green", "purple"),
+                           type = 'scatter3d', mode = 'markers',
+                           marker = list(size = 10)) %>%
+  layout(title = "3D Scatter Plot of Age Group vs. Rating",
+         scene = list(
+           xaxis = list(title = "Age Group (Numeric)"),
+           yaxis = list(title = "Rating (out of 5)"),
+           zaxis = list(title = "Price ($)")
+         ))
+
+# Display the plots
+plot_price_rating
+plot_age_rating
