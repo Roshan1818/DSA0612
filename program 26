@@ -1,0 +1,28 @@
+# Load necessary library
+library(ggplot2)
+
+# Create the data frame
+data <- data.frame(
+  Date = as.Date(c('2023-01-01', '2023-01-02', '2023-01-03', '2023-01-04', '2023-01-05')),
+  Temperature = c(10, 12, 8, 15, 14),
+  Humidity = c(75, 70, 80, 65, 72),
+  Wind_Speed = c(15, 12, 18, 20, 16)
+)
+
+# Plot Temperature vs Humidity
+ggplot(data, aes(x = Humidity, y = Temperature)) +
+  geom_point() +
+  geom_smooth(method = 'lm', col = 'blue') +
+  labs(title = 'Temperature vs Humidity',
+       x = 'Humidity (%)',
+       y = 'Temperature (°C)') +
+  theme_minimal()
+
+# Plot Temperature vs Wind Speed
+ggplot(data, aes(x = Wind_Speed, y = Temperature)) +
+  geom_point() +
+  geom_smooth(method = 'lm', col = 'blue') +
+  labs(title = 'Temperature vs Wind Speed',
+       x = 'Wind Speed (km/h)',
+       y = 'Temperature (°C)') +
+  theme_minimal()
