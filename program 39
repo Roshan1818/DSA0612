@@ -1,0 +1,47 @@
+# Install necessary packages if not already installed
+if (!require(dplyr)) install.packages("dplyr")
+if (!require(plotly)) install.packages("plotly")
+if (!require(akima)) install.packages("akima")
+
+# Load libraries
+library(dplyr)
+library(plotly)
+library(akima)
+
+# Create the original data frame
+data <- data.frame(
+  Product = c("A", "B", "C", "D", "E"),
+  Price = c(50, 70, 60, 45, 55),
+  Rating = c(4.2, 3.8, 4.0, 4.5, 3.9),
+  AgeGroup = c("25-35", "35-45", "18-25", "45-55", "25-35")
+)
+
+# Convert AgeGroup to numeric
+data <- data %>%
+  mutate(AgeGroupNumeric = as.numeric(factor(AgeGroup, levels = c("18-25", "25-35", "35-45", "45-55"))))
+
+# Create a grid of Price and AgeGroupNumeric
+price_range <- seq(min(data$Price), max(data$Price), length.out = 50)
+age_group_range <- seq(min(data$AgeGroupNumeric), max(data$AgeGroupNumeric), length.out = 50)
+grid <- expand.grid(Price = price_range, AgeGroupNumeric = age_group_range)
+
+# Interpolate Ratings for the grid
+interp <- interp(x = data$Price, y = data$AgeGroupNumeric, z = data$Rating,
+                  xo = grid$Price, yo = grid$AgeGroupNumeric)
+
+# Convert interpolation result to a data frame
+surface_data <- data.frame(
+  Price = as.vector(interp$x),
+  AgeGroupNumeric = as.vector(interp$y),
+  Rating = as.vector(interp$z)
+)
+
+# Create the 3D surface plot
+plot_ly(surface_data, x = ~Price, y = ~AgeGroupNumeric, z = ~Rating,
+        type = 'surface') %>%
+  layout(title = "3D Surface Plot of Product Ratings",
+         scene = list(
+           xaxis = list(title = "Price ($)"),
+           yaxis = list(title = "Age Group (Numeric)"),
+           zaxis = list(title = "Rating (out of 5)")
+         ))
