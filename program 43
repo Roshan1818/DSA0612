@@ -1,0 +1,25 @@
+# Install and load required packages
+if (!require("plotly")) install.packages("plotly")
+if (!require("akima")) install.packages("akima")
+library(plotly)
+library(akima)
+
+# Create the data frame
+data <- data.frame(
+  Location = c('A', 'B', 'C', 'D', 'E'),
+  Temperature = c(15, 20, 18, 12, 17),
+  Humidity = c(65, 70, 68, 60, 72),
+  CO2_Levels = c(400, 450, 420, 380, 430)
+)
+
+# Perform interpolation to create a grid of values
+interp_result <- with(data, interp(x = Temperature, y = Humidity, z = CO2_Levels))
+
+# Create the 3D surface plot
+plot_ly(x = interp_result$x, y = interp_result$y, z = interp_result$z, type = "surface") %>%
+  layout(scene = list(
+    xaxis = list(title = 'Temperature (°C)'),
+    yaxis = list(title = 'Humidity (%)'),
+    zaxis = list(title = 'CO2 Levels (ppm)'),
+    title = '3D Surface Plot of CO2 Levels vs Temperature and Humidity'
+  ))
